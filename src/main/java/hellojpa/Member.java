@@ -7,10 +7,14 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity //Jpa를 사용하는 애구나 하고 인식이 됨
+@SequenceGenerator(
+        name = "MEMBER_SEQ_GENERATOR",
+        sequenceName = "MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
+        initialValue = 1, allocationSize = 50)
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "name", nullable = false) //db내 컬럼명을 name으로 지정
