@@ -17,31 +17,27 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
 
-        //필드와 컬럼 매핑 내용 추가
+
         try {
-            Member member1 = new Member();
-            member1.setUsername("A");
 
-            Member member2 = new Member();
-            member2.setUsername("B");
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
-            Member member3 = new Member();
-            member3.setUsername("C");
+            Member member = new Member();
+            member.setUsername("member1");
+//            member.setTeamId(team.getId()); //객체지향스럽지 않은 코드
+            member.setTeam(team);
+            em.persist(member);
 
-            System.out.println("===================");
+            //직접 db에 쿼리 날리는 것 보고싶을 때
+//            em.flush();
+//            em.clear();
 
-            //시퀀스 호출 시
-            //DB SEQ = 1     |   1
-            //DB SEQ = 51    |   2
-            //DB SEQ = 51    |   3
+            Member findMember = em.find(Member.class, member.getId());
 
-            em.persist(member1); //1, 51 db에서 호출
-            em.persist(member2); //메모리에서 호출
-            em.persist(member3); //메모리에서 호출
-
-            System.out.println("member1 = " + member1.getId());
-            System.out.println("member2 = " + member2.getId());
-            System.out.println("member3 = " + member3.getId());
+            Team findTeam = findMember.getTeam();
+            System.out.println("findTeam = " + findTeam.getName());
 
 
             tx.commit();
