@@ -26,18 +26,26 @@ public class JpaMain {
 
             Member member = new Member();
             member.setUsername("member1");
-//            member.setTeamId(team.getId()); //객체지향스럽지 않은 코드
-            member.setTeam(team);
+            team.addMember(member); //양방향 관계 편의 메서드로 양쪽에 값 설정
             em.persist(member);
 
+
             //직접 db에 쿼리 날리는 것 보고싶을 때
+            //직접 flush를 해야 직접 db에서 가져온다.
 //            em.flush();
 //            em.clear();
 
-            Member findMember = em.find(Member.class, member.getId());
+            //team.getMembers().add(member); //이걸 주석처리하면 아래에서 출력되는 것이 없다. 즉, 양쪽으로 모두 값을 세팅해주어야 한다.
 
-            Team findTeam = findMember.getTeam();
-            System.out.println("findTeam = " + findTeam.getName());
+            Team findTeam = em.find(Team.class, team.getId()); //1차 캐시에 존재 (메모리에만 올라가있음)
+            List<Member> members = findTeam.getMembers();
+
+            System.out.println("===========================");
+            for (Member m : members) {
+                System.out.println("m = " + m.getUsername());
+            }
+            System.out.println("===========================");
+
 
 
             tx.commit();
